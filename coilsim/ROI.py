@@ -9,7 +9,7 @@ class ROI:
         self.radius = radius
         self.top = top
         self.bottom = bottom
-        self.m = m
+        self.m = torch.tensor(m).double()
         self.axis = axis
 
         #points within the ROI
@@ -45,14 +45,15 @@ class ROI:
         self.points = points[~torch.isnan(torch.sum(points, axis=1))]
     
     def integrate(self, coil):
-        Bx,By,Bz = coil.biot_savart(self.points)
-        return torch.sum(Bx)
+        Bx = coil.biot_savart(self.points)
+        return torch.sum(Bx).item()
     
     def magnetization(self, observation_points, mu_0=4*torch.pi*1e-7):
         def _magnetization(observation_point, mu_0):
-            R = observation_point - self.points
+            R = torch.tensor(observation_point) - self.points
             norm_R = torch.linalg.norm(R, axis=1).reshape(-1, 1)
-            B = mu_0/(4 * torch.pi) * ((3*R * torch.tile(torch.dot(self.m, R.T),3).reshape(-1,3))/norm_R**5 - self.m/norm_R**3)
+            dt = self.m @ R.T
+            B = mu_0/(4 * torch.pi) * ((3*R * torch.tile(dt,(3,)).reshape(-1,3))/norm_R**5 - self.m/norm_R**3)
             return torch.sum(B,axis=0)
         
         B = torch.zeros((len(observation_points),3))
@@ -131,14 +132,14 @@ def plotcoilsim(coil, roi, points = 10, ax = None, show=True):
     y = torch.linspace(-grid_size/5, grid_size/5, int(points/5))
     z = torch.linspace(-grid_size, grid_size, int(points))
     X, Y, Z = torch.meshgrid(x, y, z, indexing='ij')
-    Bx, By, Bz = torch.zeros_like(X), torch.zeros_like(Y), torch.zeros_like(Z)
+    # Bx, By, Bz = torch.zeros_like(X), torch.zeros_like(Y), torch.zeros_like(Z)
 
     observation_points = torch.vstack((X.ravel(), Y.ravel(), Z.ravel())).T
 
-    Bx,By,Bz = coil.biot_savart(observation_points, 1)
+    B = coil.biot_savart(observation_points, 1)
     coil.plot(color='b', linewidth=1.5, ax=ax,show=False)
     roi.plot(ax, show=False)
-    plot_magnetic_field(observation_points, Bx, By, Bz, ax=ax, show=False)
+    plot_magnetic_field(observation_points, B[:,0], B[:,1], B[:,2], ax=ax, show=False)
     ax.set_xlim([-grid_size, grid_size])
     ax.set_ylim([-grid_size, grid_size])
     ax.set_zlim([-grid_size, grid_size])

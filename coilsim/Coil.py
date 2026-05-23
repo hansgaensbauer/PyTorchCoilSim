@@ -1,8 +1,6 @@
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.patches import Ellipse
 
 class Coil:
     def __init__(self, points):
@@ -23,7 +21,7 @@ class Coil:
         else:
             points = torch.vstack((x, y, z)).T
 
-        points += torch.array(center)
+        points += torch.tensor(center)
         return cls(points)
     
     @classmethod
@@ -41,14 +39,14 @@ class Coil:
         else:
             points = torch.vstack((x, y, z)).T
 
-        points += torch.array(center)
+        points += torch.tensor(center)
         return cls(points)
 
     @classmethod
     def boxspiral(cls, height, width, length, turns=10, points_per_meter=10000, center=(0,0,0), axis='z'):
         riser_points = int(height * points_per_meter)
         horizontal_points = int(width * points_per_meter)
-        diagonal_points = int(torch.sqrt((length/turns)**2 + width**2)*points_per_meter)
+        diagonal_points = int(torch.sqrt(torch.tensor(length/turns)**2 + width**2)*points_per_meter)
         points_per_turn = 2 * riser_points + horizontal_points + diagonal_points
         total_points = turns * points_per_turn
         x = torch.empty(total_points)
@@ -81,7 +79,7 @@ class Coil:
         else:
             points = torch.vstack((x, y, z)).T
 
-        points += torch.array(center)
+        points += torch.tensor(center)
         return cls(points)
     
     @classmethod
@@ -112,7 +110,7 @@ class Coil:
         else:
             points = torch.vstack((y, x, z)).T #WARNING! This is swapped
 
-        points += torch.array(center)
+        points += torch.tensor(center)
         return cls(points)
 
     def get_segments(self):
