@@ -1,0 +1,13 @@
+[project]
+name = "coilsim"
+version = "0.0.1"
+description = "PyTorch Coil Optimization"
+readme = "README.md"
+requires-python = ">=3.9"
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]

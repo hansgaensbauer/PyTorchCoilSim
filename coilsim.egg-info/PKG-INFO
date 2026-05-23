@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: coilsim
+Version: 0.0.1
+Summary: PyTorch Coil Optimization
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# PyTorch Coil Simulator and Optimization
+This software grew some struggles with the generally excellent [CoilGen](https://github.com/Philipp-MR/CoilGen) software, which can struggle with situations where you would like to impose custom constraints on the coil geometry. For some problems (like PCB coils), I find that the mesh-based approach offers too much freedom, which can make optimizing coils with many turns painful. 
+
+To address these issues, this project provides a lightweight Bio-Savart simulator that takes a sequence of 3D points that represent a coil. This
+simulator is differentiable, making it possible to use PyTorch to optimize coils for whatever objective function you'd like. This project also includes
+functions for exporting coil geometry directly to a KiCAD PCB file, since this process was a major sticking point for CoilGen.
+
+## Example: 1D Gradient Optimization with PyTorch
+This section describes the process of designing a 1D gradient for a long/skinny ROI. The optimization from CoilGen was producing results that look like this:
+![Simulation output from coilgen, showing ]
