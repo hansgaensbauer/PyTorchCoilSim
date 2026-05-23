@@ -1,5 +1,5 @@
 # PyTorch Coil Simulator and Optimization
-This software grew some struggles with the generally excellent [CoilGen](https://github.com/Philipp-MR/CoilGen) software, which can struggle with situations where you would like to impose custom constraints on the coil geometry. For some problems (like PCB coils), I find that the mesh-based approach offers too much freedom, which can make optimizing coils with many turns painful. 
+This software grew out of some struggles with the generally excellent [CoilGen](https://github.com/Philipp-MR/CoilGen) software, which has trouble with situations where you would like to impose custom constraints on the coil geometry. For some problems (like PCB coils), I find that the mesh-based approach offers too much freedom, which can make optimizing coils with many turns painful. 
 
 To address these issues, this project provides a lightweight Bio-Savart simulator that takes a sequence of 3D points that represent a coil. This
 simulator is differentiable, making it possible to use PyTorch to optimize coils for whatever objective function you'd like. This project also includes
